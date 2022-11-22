@@ -62,6 +62,10 @@ const run = async () => {
     const usersCollection = client.db("doctorsPortal").collection("users");
     // users collection end
 
+    // doctors collection start
+    const doctorsCollection = client.db("doctorsPortal").collection("doctors");
+    // doctors collection end
+
     // collctions end
 
     // get all appointment options name for appointment specialty API start
@@ -199,6 +203,32 @@ const run = async () => {
       }
     });
     // create JWT token API end
+
+    // get all doctors API start
+    app.get("/doctors", async (req, res) => {
+      const query = {};
+      const doctors = await doctorsCollection.find(query).toArray();
+      res.send(doctors);
+    });
+    // get all doctors API end
+
+    // post doctors API start
+    app.post("/doctors", async (req, res) => {
+      const doctors = req.body;
+      const result = await doctorsCollection.insertOne(doctors);
+      res.send(result);
+    });
+    // post doctors API end
+
+    // delete a doctor API start
+    app.delete("/doctors/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = { _id: ObjectId(id) };
+      const result = await doctorsCollection.deleteOne(query);
+      res.send(result);
+    });
+    // delete a doctor API end
   } finally {
   }
 };
